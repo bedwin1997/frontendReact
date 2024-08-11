@@ -9,8 +9,19 @@ const CompEditClient = () => {
     const [tipoIdentificacion, setTipoIdentificacion] = useState('')
     const [numeroIdentificacion, setNumeroIdentificacion] = useState('');
     const [observaciones, setObservaciones] = useState('')
+    const [tiposIdentificacion, setTiposIdentificacion] = useState([]); 
     const navigate = useNavigate()
     const {id} = useParams()
+
+    //Obtener tipos de identificación
+    const fetchTiposIdentificacion = async () => {
+        try {
+            const response = await axios.get('http://localhost:3100/api/v1/documents');
+            setTiposIdentificacion(response.data.data);
+        } catch (error) {
+            console.error('Error fetching tipos de identificación:', error);
+        }
+    };
 
     //Procedimiento para actualizar
     const update = async (e) => {
@@ -26,6 +37,7 @@ const CompEditClient = () => {
 
     useEffect(() => {
         getClienteById();
+        fetchTiposIdentificacion();
     }, []);
 
     const getClienteById = async () => {
@@ -59,9 +71,11 @@ const CompEditClient = () => {
                         onChange={(e) => setTipoIdentificacion(e.target.value)}
                     >
                         <option value="">Selecciona</option>
-                        {/* Add options for different identification types */}
-                        <option value="1">DNI</option>
-                        <option value="2">PASAPORTE</option>
+                        {tiposIdentificacion.map((tipo) => (
+                            <option key={tipo.id} value={tipo.id}>
+                                {tipo.tipoDocumento}
+                            </option>
+                        ))}
                     </select>
                 </div>
                 <div className="form-group">

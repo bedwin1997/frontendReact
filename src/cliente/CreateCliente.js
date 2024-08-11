@@ -1,22 +1,46 @@
-import axios from 'axios'
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import axios from 'axios';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const URI = 'http://localhost:3100/api/v1/clients';
 
 const CompCreateCliente = () => {
-    const [nombreCliente, setNombreCliente] = useState('')
-    const [tipoIdentificacion, setTipoIdentificacion] = useState('')
+    const [nombreCliente, setNombreCliente] = useState('');
+    const [tipoIdentificacion, setTipoIdentificacion] = useState('');
     const [numeroIdentificacion, setNumeroIdentificacion] = useState('');
-    const [observaciones, setObservaciones] = useState('')
-    const navigate = useNavigate()
+    const [observaciones, setObservaciones] = useState('');
+    const [tiposIdentificacion, setTiposIdentificacion] = useState([]); 
+    const navigate = useNavigate();
 
-    //Procedimiento Guardar
+    // Obtener tipos de identificación
+    const fetchTiposIdentificacion = async () => {
+        try {
+            const response = await axios.get('http://localhost:3100/api/v1/documents');
+            setTiposIdentificacion(response.data.data);
+        } catch (error) {
+            console.error('Error fetching tipos de identificación:', error);
+        }
+    };
+
+    useEffect(() => {
+        fetchTiposIdentificacion();
+    }, []);
+
+    // Procedimiento Guardar
     const store = async (e) => {
-        e.preventDefault()
-        await axios.post(URI, { nombreCliente: nombreCliente, tipoIdentificacion: tipoIdentificacion, numeroIdentificacion: numeroIdentificacion, observaciones: observaciones })
-        navigate('/')
-    }
+        e.preventDefault();
+        try {
+            await axios.post(URI, {
+                nombreCliente,
+                tipoIdentificacion,
+                numeroIdentificacion,
+                observaciones
+            });
+            navigate('/');
+        } catch (error) {
+            console.error('Error saving client:', error);
+        }
+    };
 
     return (
         <div className='container'>
@@ -41,9 +65,11 @@ const CompCreateCliente = () => {
                         onChange={(e) => setTipoIdentificacion(e.target.value)}
                     >
                         <option value="">Selecciona</option>
-                        {/* Add options for different identification types */}
-                        <option value="1">DNI</option>
-                        <option value="2">PASAPORTE</option>
+                        {tiposIdentificacion.map((tipo) => (
+                            <option key={tipo.id} value={tipo.id}>
+                                {tipo.tipoDocumento}
+                            </option>
+                        ))}
                     </select>
                 </div>
                 <div className="form-group">
@@ -70,7 +96,7 @@ const CompCreateCliente = () => {
                 </button>
             </form>
         </div>
-    )
+    );
 }
 
-export default CompCreateCliente
+export default CompCreateCliente;
