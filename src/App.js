@@ -1,7 +1,13 @@
 import logo from './logo.svg';
 import './App.css';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+
+//Importamos los componentes
 import CompShowClientes from './cliente/ShowCliente';
+import CompCreateCliente from './cliente/CreateCliente';
+import CompEditClient from './cliente/EditCliente';
+
+//Importamos el route
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 function App() {
   return (
@@ -12,6 +18,8 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<CompShowClientes />} />
+          <Route path="/create" element={<CompCreateCliente />} />
+          <Route path="/edit/:id" element={<CompEditClient />} />
         </Routes>
       </BrowserRouter>
     </div>

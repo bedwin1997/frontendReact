@@ -41,7 +41,7 @@ const CompShowClientes = () => {
             <div className='row'>
                 <div className='col'>
                     <Link to="/create" className='btn btn-primary mt-2 mb-2'><i className="fa-solid fa-plus"></i></Link>
-                    <table class="table table-striped-columns">
+                    <table className="table table-striped-columns">
                         <thead className='table-primary'>
                             <tr>
                                 <th>Nombre Cliente</th>
