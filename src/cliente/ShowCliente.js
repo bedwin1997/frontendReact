@@ -6,6 +6,7 @@ import { Container, Row, Col, Table, Button, Card } from 'react-bootstrap';
 const URI = 'http://localhost:3100/api/v1/clients';
 
 const CompShowClientes = () => {
+    //Hook para los datos que interactuan con la iterfaz de usuario 
     const [clientes, setClientes] = useState([]);
     const [tiposIdentificacion, setTiposIdentificacion] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
@@ -23,6 +24,7 @@ const CompShowClientes = () => {
         }
     };
 
+    //Carga los clientes y el tipo de documento al momento de ingresar en la vista
     useEffect(() => {
         getClientes();
         fetchTiposIdentificacion();
@@ -45,10 +47,12 @@ const CompShowClientes = () => {
         }
     };
 
+    //Funcion que permite utilizar paginación
     const handlePageChange = (page) => {
         setCurrentPage(page);
     };
 
+    //Alcambiar de pagina los datos se actualizaran y se listaran sin problema en la nueva pagina
     useEffect(() => {
         getClientes(currentPage);
         fetchTiposIdentificacion();

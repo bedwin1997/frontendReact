@@ -6,6 +6,7 @@ import { Form, Button, Row, Col, Card, FloatingLabel } from 'react-bootstrap';
 const URI = 'http://localhost:3100/api/v1/invoinces';
 
 const CompCreateInvoice = () => {
+    //Hook para los datos que interactuan con la iterfaz de usuario 
     const [idCliente, setIdCliente] = useState('');
     const [fecha, setFecha] = useState('');
     const [nombreProducto, setNombreProducto] = useState('');
@@ -16,6 +17,7 @@ const CompCreateInvoice = () => {
     const [nombresClientes, setNombresClientes] = useState([]);
     const navigate = useNavigate();
 
+    // Obtiene el nombre de clientes
     const fetchNombresClientes = async () => {
         try {
             const response = await axios.get('http://localhost:3100/api/v1/clients');
@@ -25,28 +27,34 @@ const CompCreateInvoice = () => {
         }
     };
 
+    //Obtiene los nombres de los clientes
     useEffect(() => {
         fetchNombresClientes();
     }, []);
 
+    // Calcula el valor total de la factura
     const calculateTotal = () => {
         const precioNumber = parseFloat(precio) || 0;
         const descuentoNumber = parseFloat(valorDescuento) || 0;
         const ivaNumber = parseFloat(iva) || 19;
 
+        // Calcula el descuento
         const descuento = (precioNumber * descuentoNumber) / 100;
         const precioDescuento = precioNumber - descuento;
 
+        // Calcula el IVA
         const ivaAmount = (precioDescuento * ivaNumber) / 100;
         const total = precioDescuento + ivaAmount;
 
         setValorTotal(total.toFixed(2));
     };
 
+    //Permite generar el calculo del total de la factura teniendo encuenta el precio, valor de descuento y el IVA
     useEffect(() => {
         calculateTotal();
     }, [precio, valorDescuento, iva]);
 
+    // Procedimiento para guardar
     const store = async (e) => {
         e.preventDefault();
         try {

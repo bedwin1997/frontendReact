@@ -6,6 +6,7 @@ import { Form, Button, Container, Card, Row, Col, FloatingLabel } from 'react-bo
 const URI = 'http://localhost:3100/api/v1/clients/';
 
 const CompEditClient = () => {
+    //Hook para los datos que interactuan con la iterfaz de usuario 
     const [nombreCliente, setNombreCliente] = useState('');
     const [tipoIdentificacion, setTipoIdentificacion] = useState('');
     const [numeroIdentificacion, setNumeroIdentificacion] = useState('');
@@ -40,11 +41,13 @@ const CompEditClient = () => {
         }
     };
 
+     //Obtiene el id y el tipo de identificacion del cliente al momento de editar
     useEffect(() => {
         getClienteById();
         fetchTiposIdentificacion();
     }, []);
 
+    //Funcion asincronica que obtiene los datos que corresponden a el detalle de la factura 
     const getClienteById = async () => {
         try {
             const res = await axios.get(URI + id);

@@ -6,6 +6,7 @@ import { Form, Button, Container, Card, Row, Col, FloatingLabel } from 'react-bo
 const URI = 'http://localhost:3100/api/v1/clients';
 
 const CompCreateCliente = () => {
+    //Hook para los datos que interactuan con la iterfaz de usuario 
     const [nombreCliente, setNombreCliente] = useState('');
     const [tipoIdentificacion, setTipoIdentificacion] = useState('');
     const [numeroIdentificacion, setNumeroIdentificacion] = useState('');
@@ -13,6 +14,7 @@ const CompCreateCliente = () => {
     const [tiposIdentificacion, setTiposIdentificacion] = useState([]);
     const navigate = useNavigate();
 
+    // Obtiene el tipo de identifiacion
     const fetchTiposIdentificacion = async () => {
         try {
             const response = await axios.get('http://localhost:3100/api/v1/documents');
@@ -22,10 +24,12 @@ const CompCreateCliente = () => {
         }
     };
 
+    //Obtiene los tipos de identificacion al momneot de ingresar en la vista
     useEffect(() => {
         fetchTiposIdentificacion();
     }, []);
 
+    // Procedimiento para guardar
     const store = async (e) => {
         e.preventDefault();
         try {

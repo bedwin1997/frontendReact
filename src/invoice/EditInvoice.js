@@ -6,6 +6,7 @@ import { Form, Button, Row, Col, Card, FloatingLabel } from 'react-bootstrap';
 const URI = 'http://localhost:3100/api/v1/invoinces/';
 
 const CompEditInvoice = () => {
+    //Hook para los datos que interactuan con la iterfaz de usuario 
     const [idCliente, setIdCliente] = useState('');
     const [fecha, setFecha] = useState('');
     const [nombreProducto, setNombreProducto] = useState('');
@@ -17,7 +18,7 @@ const CompEditInvoice = () => {
     const navigate = useNavigate();
     const { id } = useParams();
 
-    // Obtener nombre de clientes
+    // Obtiene el nombre de clientes
     const fetchNombresClientes = async () => {
         try {
             const response = await axios.get('http://localhost:3100/api/v1/clients');
@@ -44,6 +45,7 @@ const CompEditInvoice = () => {
         setValorTotal(total.toFixed(2));
     };
 
+    //Permite generar el calculo del total de la factura teniendo encuenta el precio, valor de descuento y el IVA
     useEffect(() => {
         calculateTotal();
     }, [precio, valorDescuento, iva]);
@@ -63,11 +65,13 @@ const CompEditInvoice = () => {
         navigate('/invoice');
     };
 
+    //Obtiene el id y el nombre del cliente al momento de editar
     useEffect(() => {
         getInvoiceById();
         fetchNombresClientes();
     }, []);
 
+//Funcion asincronica que obtiene los datos que corresponden a el detalle de la factura     
     const getInvoiceById = async () => {
         const res = await axios.get(URI + id);
         const invoiceData = res.data.data;

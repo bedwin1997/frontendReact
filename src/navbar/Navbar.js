@@ -5,6 +5,7 @@ import { faFileInvoice } from '@fortawesome/free-solid-svg-icons';
 import { Link, useLocation } from 'react-router-dom';
 
 const Navbar = () => {
+    //Activacion de la opcion del navbar al dar click
     const location = useLocation();
     const [activeItem, setActiveItem] = useState(location.pathname === '/' ? 'Clientes' : 'Facturas');
 

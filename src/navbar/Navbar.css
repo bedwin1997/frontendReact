@@ -1,5 +1,5 @@
 .navbar {
-    background-color: #000; /* Black background */
+    background-color: #000; 
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -39,7 +39,7 @@
     margin-left: 25px;
     text-decoration: none;
     font-size: 16px;
-    transition: color 0.3s, border-bottom 0.3s; /* Smooth transition for color change */
+    transition: color 0.3s, border-bottom 0.3s;
 }
 
 .menu-item:first-child {
