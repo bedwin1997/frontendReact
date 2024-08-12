@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Form, Button, Row, Col, Card, FloatingLabel } from 'react-bootstrap';
 
 const URI = 'http://localhost:3100/api/v1/invoinces';
 
@@ -9,13 +10,12 @@ const CompCreateInvoice = () => {
     const [fecha, setFecha] = useState('');
     const [nombreProducto, setNombreProducto] = useState('');
     const [precio, setPrecio] = useState('');
-    const [valorDescuento, setValorDescuento] = useState('0'); // Valor por defecto del descuento
-    const [iva, setIva] = useState(19); // Valor predeterminado del IVA
+    const [valorDescuento, setValorDescuento] = useState('0');
+    const [iva, setIva] = useState(19);
     const [valorTotal, setValorTotal] = useState('');
     const [nombresClientes, setNombresClientes] = useState([]);
     const navigate = useNavigate();
 
-    // Obtener nombres de clientes
     const fetchNombresClientes = async () => {
         try {
             const response = await axios.get('http://localhost:3100/api/v1/clients');
@@ -29,28 +29,24 @@ const CompCreateInvoice = () => {
         fetchNombresClientes();
     }, []);
 
-    //Calcula el valor total de la factura
     const calculateTotal = () => {
         const precioNumber = parseFloat(precio) || 0;
         const descuentoNumber = parseFloat(valorDescuento) || 0;
-        const ivaNumber = parseFloat(iva) || 19; 
+        const ivaNumber = parseFloat(iva) || 19;
 
-        // Calcula el descuento
         const descuento = (precioNumber * descuentoNumber) / 100;
         const precioDescuento = precioNumber - descuento;
 
-        // Calcula el IVA
         const ivaAmount = (precioDescuento * ivaNumber) / 100;
         const total = precioDescuento + ivaAmount;
 
         setValorTotal(total.toFixed(2));
-    }
+    };
 
     useEffect(() => {
         calculateTotal();
     }, [precio, valorDescuento, iva]);
 
-    // Procedimiento Guardar
     const store = async (e) => {
         e.preventDefault();
         try {
@@ -60,7 +56,7 @@ const CompCreateInvoice = () => {
                 nombreProducto,
                 precio,
                 valorDescuento,
-                iva, // Guardar el IVA como 19
+                iva,
                 valorTotal
             });
             navigate('/invoice');
@@ -70,96 +66,114 @@ const CompCreateInvoice = () => {
     };
 
     return (
-        <div className='container'>
-            <h1>Crear Factura</h1>
-            <form onSubmit={store}>
-                <div className='form-group'>
-                    <label htmlFor="idCliente">Cliente:</label>
-                    <select
-                        className="form-control"
-                        id="idCliente"
-                        value={idCliente}
-                        onChange={(e) => setIdCliente(e.target.value)}
-                    >
-                        <option value="">Selecciona</option>
-                        {nombresClientes.map((nombre) => (
-                            <option key={nombre.id} value={nombre.id}>
-                                {nombre.nombreCliente}
-                            </option>
-                        ))}
-                    </select>
-                </div>
-                <div className='form-group'>
-                    <label htmlFor="fecha">Fecha:</label>
-                    <input
-                        type="datetime-local"
-                        className='form-control'
-                        id="fecha"
-                        value={fecha}
-                        onChange={(e) => setFecha(e.target.value)}
-                    />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="nombreProducto">Nombre Producto:</label>
-                    <input
-                        type="text"
-                        className="form-control"
-                        id="nombreProducto"
-                        value={nombreProducto}
-                        onChange={(e) => setNombreProducto(e.target.value)}
-                    />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="precio">Precio:</label>
-                    <input
-                        type="number"
-                        className="form-control"
-                        id="precio"
-                        value={precio}
-                        onChange={(e) => setPrecio(e.target.value)}
-                    />
-                </div>
-                <div className='form-group'>
-                    <label htmlFor="valorDescuento">Descuento:</label>
-                    <select
-                        className="form-control"
-                        id="valorDescuento"
-                        value={valorDescuento}
-                        onChange={(e) => setValorDescuento(e.target.value)}
-                    >
-                        <option value="0">0%</option>
-                        <option value="10">10%</option>
-                        <option value="20">20%</option>
-                        <option value="30">30%</option>
-                        <option value="50">50%</option>
-                    </select>
-                </div>
-                <div className='form-group'>
-                    <label htmlFor="iva">IVA:</label>
-                    <input
-                        type="number"
-                        className="form-control"
-                        id="iva"
-                        value={iva}
-                        onChange={(e) => setIva(e.target.value)}
-                        readOnly
-                    />
-                </div>
-                <div className='form-group'>
-                    <label htmlFor="valorTotal">Valor Total:</label>
-                    <input
-                        type="text"
-                        className="form-control"
-                        id="valorTotal"
-                        value={valorTotal}
-                        readOnly
-                    />
-                </div>
-                <button type="submit" className="btn btn-primary">
-                    Guardar Invoice
-                </button>
-            </form>
-        </div>
+        <Card style={{ maxWidth: '800px', margin: '20px auto', padding: '20px', borderRadius: '10px', boxShadow: '0px 0px 15px rgba(0, 0, 0, 0.1)' }}>
+            <h3 style={{ color: '#000', textAlign: 'center', marginBottom: '20px' }}>Facturas</h3>
+            <Form onSubmit={store}>
+                <Form.Group>
+                    <Card.Header className="bg-light text-dark text-center mb-3" style={{ borderRadius: '10px' }}>
+                        Rellena la siguiente información
+                    </Card.Header>
+                </Form.Group>
+                <Row className="mb-3">
+                    <Col md={6}>
+                        <FloatingLabel controlId="idCliente" label="Cliente">
+                            <Form.Control 
+                                as="select" 
+                                value={idCliente} 
+                                onChange={(e) => setIdCliente(e.target.value)}
+                                style={{ borderRadius: '10px' }}
+                            >
+                                <option value="">Selecciona cliente</option>
+                                {nombresClientes.map((nombre) => (
+                                    <option key={nombre.id} value={nombre.id}>
+                                        {nombre.nombreCliente}
+                                    </option>
+                                ))}
+                            </Form.Control>
+                        </FloatingLabel>
+                    </Col>
+                    <Col md={6}>
+                        <FloatingLabel controlId="fecha" label="Fecha">
+                            <Form.Control 
+                                type="date" 
+                                value={fecha} 
+                                onChange={(e) => setFecha(e.target.value)}
+                                style={{ borderRadius: '10px' }}
+                            />
+                        </FloatingLabel>
+                    </Col>
+                </Row>
+                <Row className="mb-3">
+                    <Col md={6}>
+                        <FloatingLabel controlId="nombreProducto" label="Nombre del producto">
+                            <Form.Control 
+                                type="text" 
+                                placeholder="Escribe nombre de producto"
+                                value={nombreProducto} 
+                                onChange={(e) => setNombreProducto(e.target.value)}
+                                style={{ borderRadius: '10px' }}
+                            />
+                        </FloatingLabel>
+                    </Col>
+                    <Col md={6}>
+                        <FloatingLabel controlId="precio" label="Precio">
+                            <Form.Control 
+                                type="number" 
+                                placeholder="Escribe precio"
+                                value={precio} 
+                                onChange={(e) => setPrecio(e.target.value)}
+                                style={{ borderRadius: '10px' }}
+                            />
+                        </FloatingLabel>
+                    </Col>
+                </Row>
+                <Row className="mb-3">
+                    <Col md={6}>
+                        <FloatingLabel controlId="valorDescuento" label="Valor de descuento">
+                            <Form.Control 
+                                as="select" 
+                                value={valorDescuento} 
+                                onChange={(e) => setValorDescuento(e.target.value)}
+                                style={{ borderRadius: '10px' }}
+                            >
+                                <option value="0">0%</option>
+                                <option value="10">10%</option>
+                                <option value="20">20%</option>
+                                <option value="30">30%</option>
+                                <option value="50">50%</option>
+                            </Form.Control>
+                        </FloatingLabel>
+                    </Col>
+                    <Col md={6}>
+                        <FloatingLabel controlId="iva" label="IVA">
+                            <Form.Control 
+                                type="text" 
+                                value={`${iva}%`} 
+                                readOnly
+                                style={{ borderRadius: '10px' }}
+                            />
+                        </FloatingLabel>
+                    </Col>
+                </Row>
+                <Form.Group className="mt-3">
+                    <Form.Label>Valor total de la factura:</Form.Label>
+                    <h4>${valorTotal}</h4>
+                </Form.Group>
+                <Button 
+                    type="submit" 
+                    style={{
+                        backgroundColor: '#7879F1',
+                        borderColor: '#7879F1',
+                        borderRadius: '20px',
+                        padding: '10px 20px',
+                        marginTop: '20px',
+                        float: 'right'
+                    }}
+                >
+                    Enviar factura
+                </Button>
+            </Form>
+        </Card>
     );
 }
 

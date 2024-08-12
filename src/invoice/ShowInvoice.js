@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Container, Row, Col, Table, Button, Card } from 'react-bootstrap';
 
 const URI = 'http://localhost:3100/api/v1/invoinces';
 
@@ -28,7 +29,7 @@ const CompShowInvoice = () => {
         return nombre ? nombre.nombreCliente : 'Desconocido';
     }
 
-    // Procedimiento para mostrar todos los clientes
+    // Procedimiento para mostrar todas las facturas
     const getInvoice = async (page = 1) => {
         try {
             const res = await axios.get(`${URI}?page=${page}&limit=${itemsPerPage}`);
@@ -50,71 +51,111 @@ const CompShowInvoice = () => {
         fetchNombresClientes();
     }, [currentPage]);
 
-
     const handlePageChange = (page) => {
         setCurrentPage(page);
     };
 
-    // Procedimiento para eliminar un cliente
+    // Procedimiento para eliminar una factura
     const deleteInvoice = async (id) => {
         try {
             await axios.delete(`${URI}/${id}`);
-            getInvoice(); // Recargar clientes después de la eliminación
+            getInvoice(); // Recargar facturas después de la eliminación
         } catch (error) {
             console.error('Error al eliminar factura:', error);
         }
     };
 
-    //const totalPages = Math.ceil(totalItems / itemsPerPage);
-
     return (
-        <div className='container'>
-            <div className='row'>
-                <div className='col'>
-                    <Link to="/createinvoice" className='btn btn-primary mt-2 mb-2'><i className="fa-solid fa-plus"></i></Link>
-                    <table className="table table-striped-columns">
-                        <thead className='table-primary'>
-                            <tr>
-                                <th>Id Cliente</th>
-                                <th>Fecha</th>
-                                <th>Nombre Producto</th>
-                                <th>Precio</th>
-                                <th>Valor Descuento</th>
-                                <th>IVA</th>
-                                <th>Valor Total</th>
-                                <th>Opciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {Array.isArray(invoices) && invoices.map((invoice) => (
-                                <tr key={invoice.id}>
-                                    <td>{getNombreCliente(invoice.idCliente)}</td>
-                                    <td>{invoice.fecha}</td>
-                                    <td>{invoice.nombreProducto}</td>
-                                    <td>{invoice.precio}</td>
-                                    <td>{invoice.valorDescuento}</td>
-                                    <td>{invoice.iva}</td>
-                                    <td>{invoice.valorTotal}</td>
-                                    <td>
-                                        <Link to={`/editinvoice/${invoice.id}`} className="btn btn-info"><i className="fa-solid fa-pen-to-square"></i></Link>
-                                        <button className="btn btn-danger" onClick={() => deleteInvoice(invoice.id)}><i className="fa-solid fa-trash-can"></i></button>
-                                    </td>
+        <Container style={{ marginTop: '20px' }}>
+            <Card className="p-4" style={{ borderRadius: '15px', borderColor: '#f0f0f5' }}>
+                <h2 className="mb-4" style={{ color: '#FFFFFF', textAlign: 'center', backgroundColor: '#000', padding: '10px', borderRadius: '10px' }}>Lista de Facturas</h2>
+                <Row>
+                    <Col className='text-end mb-3'>
+                        <Link to="/createinvoice">
+                            <Button 
+                                style={{
+                                    backgroundColor: '#7879F1',
+                                    borderColor: '#7879F1',
+                                    borderRadius: '20px',
+                                    padding: '10px 20px'
+                                }}>
+                                <i className="fa-solid fa-plus"></i> Agregar Factura
+                            </Button>
+                        </Link>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col>
+                        <Table striped hover responsive>
+                            <thead style={{ backgroundColor: '#EDEDF3', color: '#6B6B75' }}>
+                                <tr>
+                                    <th>Id Cliente</th>
+                                    <th>Fecha</th>
+                                    <th>Nombre Producto</th>
+                                    <th>Precio</th>
+                                    <th>Valor Descuento</th>
+                                    <th>IVA</th>
+                                    <th>Valor Total</th>
+                                    <th>Opciones</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                    <div className="pagination">
-                        <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
-                            Anterior
-                        </button>
-                        <span>Página {currentPage} de {totalPages}</span>
-                        <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>
-                            Siguiente
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
+                            </thead>
+                            <tbody>
+                                {Array.isArray(invoices) && invoices.map((invoice) => (
+                                    <tr key={invoice.id}>
+                                        <td>{getNombreCliente(invoice.idCliente)}</td>
+                                        <td>{invoice.fecha}</td>
+                                        <td>{invoice.nombreProducto}</td>
+                                        <td>{invoice.precio}</td>
+                                        <td>{invoice.valorDescuento}</td>
+                                        <td>{invoice.iva}</td>
+                                        <td>{invoice.valorTotal}</td>
+                                        <td>
+                                            <Link to={`/editinvoice/${invoice.id}`} className="btn btn-info" style={{ marginRight: '5px' }}>
+                                                <i className="fa-solid fa-pen-to-square"></i>
+                                            </Link>
+                                            <Button 
+                                                className="btn btn-danger" 
+                                                onClick={() => deleteInvoice(invoice.id)}
+                                                style={{ backgroundColor: '#FF5C5C', borderColor: '#FF5C5C' }}
+                                            >
+                                                <i className="fa-solid fa-trash-can"></i>
+                                            </Button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </Table>
+                        <div className="d-flex justify-content-between">
+                            <Button 
+                                onClick={() => handlePageChange(currentPage - 1)} 
+                                disabled={currentPage === 1}
+                                style={{
+                                    backgroundColor: '#7879F1',
+                                    borderColor: '#7879F1',
+                                    borderRadius: '10px',
+                                    padding: '5px 15px'
+                                }}>
+                                Anterior
+                            </Button>
+                            <span style={{ margin: 'auto 0', color: '#6B6B75' }}>
+                                Página {currentPage} de {totalPages}
+                            </span>
+                            <Button 
+                                onClick={() => handlePageChange(currentPage + 1)} 
+                                disabled={currentPage === totalPages}
+                                style={{
+                                    backgroundColor: '#7879F1',
+                                    borderColor: '#7879F1',
+                                    borderRadius: '10px',
+                                    padding: '5px 15px'
+                                }}>
+                                Siguiente
+                            </Button>
+                        </div>
+                    </Col>
+                </Row>
+            </Card>
+        </Container>
     );
 };
 

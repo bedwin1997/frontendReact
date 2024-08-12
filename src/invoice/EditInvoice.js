@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { Form, Button, Row, Col, Card, FloatingLabel } from 'react-bootstrap';
 
 const URI = 'http://localhost:3100/api/v1/invoinces/';
 
@@ -51,13 +52,13 @@ const CompEditInvoice = () => {
     const update = async (e) => {
         e.preventDefault();
         await axios.put(URI + id, {
-            idCliente: idCliente,
-            fecha: fecha,
-            nombreProducto: nombreProducto,
-            precio: precio,
-            valorDescuento: valorDescuento,
-            iva: iva,
-            valorTotal: valorTotal
+            idCliente,
+            fecha,
+            nombreProducto,
+            precio,
+            valorDescuento,
+            iva,
+            valorTotal
         });
         navigate('/invoice');
     };
@@ -84,97 +85,123 @@ const CompEditInvoice = () => {
     };
 
     return (
-        <div className='container'>
-            <h1>Editar Factura</h1>
-            <form onSubmit={update}>
-                <div className='form-group'>
-                    <label htmlFor="idCliente">Cliente:</label>
-                    <select
-                        className="form-control"
-                        id="idCliente"
-                        value={idCliente}
-                        onChange={(e) => setIdCliente(e.target.value)}
-                    >
-                        <option value="">Selecciona</option>
-                        {nombresClientes.map((nombre) => (
-                            <option key={nombre.id} value={nombre.id}>
-                                {nombre.nombreCliente}
-                            </option>
-                        ))}
-                    </select>
-                </div>
-                <div className='form-group'>
-                    <label htmlFor="fecha">Fecha:</label>
-                    <input
-                        type="datetime-local"
-                        className='form-control'
-                        id="fecha"
-                        value={fecha}
-                        onChange={(e) => setFecha(e.target.value)}
-                    />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="nombreProducto">Nombre Producto:</label>
-                    <input
-                        type="text"
-                        className="form-control"
-                        id="nombreProducto"
-                        value={nombreProducto}
-                        onChange={(e) => setNombreProducto(e.target.value)}
-                    />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="precio">Precio:</label>
-                    <input
-                        type="number"
-                        className="form-control"
-                        id="precio"
-                        value={precio}
-                        onChange={(e) => setPrecio(e.target.value)}
-                    />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="valorDescuento">Valor Descuento:</label>
-                    <select
-                        className="form-control"
-                        id="valorDescuento"
-                        value={valorDescuento}
-                        onChange={(e) => setValorDescuento(e.target.value)}
-                    >
-                        <option value="0">0%</option>
-                        <option value="10">10%</option>
-                        <option value="20">20%</option>
-                        <option value="30">30%</option>
-                        <option value="50">50%</option>
-                    </select>
-                </div>
-                <div className="form-group">
-                    <label htmlFor="iva">IVA:</label>
-                    <input
-                        type="number"
-                        className="form-control"
-                        id="iva"
-                        value={iva}
-                        onChange={(e) => setIva(e.target.value)}
-                        readOnly
-                    />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="valorTotal">Valor Total:</label>
-                    <input
-                        type="text"
-                        className="form-control"
-                        id="valorTotal"
-                        value={valorTotal}
-                        readOnly
-                    />
-                </div>
-                <button type="submit" className="btn btn-primary">
-                    Guardar cliente
-                </button>
-            </form>
-        </div>
+        <Card style={{ maxWidth: '800px', margin: '20px auto', padding: '20px', borderRadius: '10px', boxShadow: '0px 0px 15px rgba(0, 0, 0, 0.1)' }}>
+            <h3 style={{ color: '#000', textAlign: 'center', marginBottom: '20px' }}>Editar Factura</h3>
+            <Form onSubmit={update}>
+                <Form.Group>
+                    <Card.Header className="bg-light text-dark text-center mb-3" style={{ borderRadius: '10px' }}>
+                        Rellena la siguiente información
+                    </Card.Header>
+                </Form.Group>
+                <Row className="mb-3">
+                    <Col md={6}>
+                        <FloatingLabel controlId="idCliente" label="Cliente">
+                            <Form.Control 
+                                as="select" 
+                                value={idCliente} 
+                                onChange={(e) => setIdCliente(e.target.value)}
+                                style={{ borderRadius: '10px' }}
+                            >
+                                <option value="">Selecciona</option>
+                                {nombresClientes.map((nombre) => (
+                                    <option key={nombre.id} value={nombre.id}>
+                                        {nombre.nombreCliente}
+                                    </option>
+                                ))}
+                            </Form.Control>
+                        </FloatingLabel>
+                    </Col>
+                    <Col md={6}>
+                        <FloatingLabel controlId="fecha" label="Fecha">
+                            <Form.Control 
+                                type="datetime-local" 
+                                value={fecha} 
+                                onChange={(e) => setFecha(e.target.value)}
+                                style={{ borderRadius: '10px' }}
+                            />
+                        </FloatingLabel>
+                    </Col>
+                </Row>
+                <Row className="mb-3">
+                    <Col md={6}>
+                        <FloatingLabel controlId="nombreProducto" label="Nombre del producto">
+                            <Form.Control 
+                                type="text" 
+                                placeholder="Escribe nombre del producto"
+                                value={nombreProducto} 
+                                onChange={(e) => setNombreProducto(e.target.value)}
+                                style={{ borderRadius: '10px' }}
+                            />
+                        </FloatingLabel>
+                    </Col>
+                    <Col md={6}>
+                        <FloatingLabel controlId="precio" label="Precio">
+                            <Form.Control 
+                                type="number" 
+                                placeholder="Escribe precio"
+                                value={precio} 
+                                onChange={(e) => setPrecio(e.target.value)}
+                                style={{ borderRadius: '10px' }}
+                            />
+                        </FloatingLabel>
+                    </Col>
+                </Row>
+                <Row className="mb-3">
+                    <Col md={6}>
+                        <FloatingLabel controlId="valorDescuento" label="Valor de descuento">
+                            <Form.Control 
+                                as="select" 
+                                value={valorDescuento} 
+                                onChange={(e) => setValorDescuento(e.target.value)}
+                                style={{ borderRadius: '10px' }}
+                            >
+                                <option value="0">0%</option>
+                                <option value="10">10%</option>
+                                <option value="20">20%</option>
+                                <option value="30">30%</option>
+                                <option value="50">50%</option>
+                            </Form.Control>
+                        </FloatingLabel>
+                    </Col>
+                    <Col md={6}>
+                        <FloatingLabel controlId="iva" label="IVA">
+                            <Form.Control 
+                                type="text" 
+                                value={`${iva}%`} 
+                                readOnly
+                                style={{ borderRadius: '10px' }}
+                            />
+                        </FloatingLabel>
+                    </Col>
+                </Row>
+                <Row className="mb-3">
+                    <Col md={12}>
+                        <FloatingLabel controlId="valorTotal" label="Valor Total">
+                            <Form.Control 
+                                type="text" 
+                                value={valorTotal}
+                                readOnly
+                                style={{ borderRadius: '10px' }}
+                            />
+                        </FloatingLabel>
+                    </Col>
+                </Row>
+                <Button 
+                    type="submit" 
+                    style={{
+                        backgroundColor: '#7879F1',
+                        borderColor: '#7879F1',
+                        borderRadius: '20px',
+                        padding: '10px 20px',
+                        marginTop: '20px',
+                        float: 'right'
+                    }}
+                >
+                    Guardar factura
+                </Button>
+            </Form>
+        </Card>
     );
-};
+}
 
 export default CompEditInvoice;
